@@ -1,6 +1,6 @@
 import React from "react";
 
-function View({ list }) {
+function View({ list, handleDelete, handleEdit }) {
   return (
     <>
       <table className="table w-50 mx-auto caption-top table-bordered">
@@ -13,6 +13,7 @@ function View({ list }) {
             <th scope="col">username</th>
             <th scope="col">email</th>
             <th scope="col">password</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -23,6 +24,15 @@ function View({ list }) {
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td>{user.password}</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(user.id)}
+                  >
+                    Delete
+                  </button>
+                  <button onClick={() => handleEdit(user)}>Edit</button>
+                </td>
               </tr>
             ))
           ) : (

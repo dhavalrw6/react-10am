@@ -4,6 +4,7 @@ import View from "./View";
 function Form() {
   const [user, setUser] = useState({});
   const [list, setList] = useState([]);
+  const [editId, setEditId] = useState(null);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -12,8 +13,34 @@ function Form() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setList([...list, user]);
+
+    if (editId === null) {
+      let newUser = { ...user, id: Date.now() };
+      setList([...list, newUser]);
+    } else {
+      const { username, email, password } = user;
+      let newList = list.filter((user) => {
+        if (user.id == editId) {
+          user.username = username;
+          user.email = email;
+          user.password = password;
+        }
+
+        return user;
+      });
+      setEditId(null);
+    }
     setUser({});
+  };
+
+  const handleDelete = (id) => {
+    let newList = list.filter((user) => user.id !== id);
+    setList(newList);
+  };
+
+  const handleEdit = (user) => {
+    setUser(user);
+    setEditId(user.id);
   };
 
   console.log(list);
@@ -65,10 +92,10 @@ function Form() {
           />
         </div>
         <button type="submit" className="btn btn-primary">
-          Submit
+          {editId !== null ? "Update" : "Submit"}
         </button>
       </form>
-      <View list={list} />
+      <View list={list} handleDelete={handleDelete} handleEdit={handleEdit} />
     </>
   );
 }
