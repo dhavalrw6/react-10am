@@ -1,0 +1,6 @@
+.active {
+  background-color: aqua;
+  font-size: xx-large;
+  color: blueviolet;
+  transition: all 0.5s ease-in-out;
+}
