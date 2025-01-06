@@ -13,7 +13,14 @@ function View({ list, handleDelete, handleEdit }) {
             <th scope="col">username</th>
             <th scope="col">email</th>
             <th scope="col">password</th>
+<<<<<<< HEAD
             <th scope="col">Action</th>
+=======
+            <th scope="col">Phone</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Address</th>
+            <th scope="col">City</th>
+>>>>>>> ac0dde8 (update)
           </tr>
         </thead>
         <tbody>
@@ -24,6 +31,7 @@ function View({ list, handleDelete, handleEdit }) {
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td>{user.password}</td>
+<<<<<<< HEAD
                 <td>
                   <button
                     className="btn btn-danger"
@@ -33,6 +41,12 @@ function View({ list, handleDelete, handleEdit }) {
                   </button>
                   <button onClick={() => handleEdit(user)}>Edit</button>
                 </td>
+=======
+                <td>{user.phone}</td>
+                <td>{user.gender}</td>
+                <td>{user.address}</td>
+                <td>{user.city}</td>
+>>>>>>> ac0dde8 (update)
               </tr>
             ))
           ) : (
