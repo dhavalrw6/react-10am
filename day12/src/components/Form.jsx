@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import View from "./View";
 
 function Form() {
@@ -6,32 +6,39 @@ function Form() {
   const [list, setList] = useState([]);
   const [hobby, setHobby] = useState([]);
 
+  useEffect(()=>{
+    let oldList = JSON.parse(localStorage.getItem("list")) || [];
+    setList(oldList);
+  })
+
   const handleChange = (e) => {
-    let { name, value } = e.target;
-    let newHobby = [];
+    let { name, value, checked } = e.target;
+    // console.log(e);
+
     if (name == "hobby") {
-      if (!user.hobby.includes(value)) {
-        newHobby = [...hobby];
-        setHobby(newHobby);
-        console.log(newHobby);
-      } else if (user.hobby) {
-        newHobby = [...hobby, value];
-        console.log(newHobby);
-        setHobby(newHobby);
+      let newHobby = [...hobby];
+      if (checked) {
+        newHobby.push(value);
+      } else {
+        newHobby = newHobby.filter((val) => val != value);
       }
-      value = hobby;
+      console.log(newHobby);
+      setHobby(newHobby);
+      value = newHobby;
     }
     setUser({ ...user, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(user);
-    setList([...list, user]);
+    let newList = [...list, user];
+    setList(newList);
+    localStorage.setItem('list',JSON.stringify(newList));
     setUser({});
+    setHobby([]);
   };
 
-  console.log(list);
+  // console.log(list);
 
   return (
     <>
@@ -80,32 +87,33 @@ function Form() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
+          <label htmlFor="exampleInputPhone" className="form-label">
             Phone
           </label>
           <input
             type="number"
             className="form-control"
-            id="exampleInputPassword1"
+            id="exampleInputPhone"
             name="phone"
             value={user.phone || ""}
             onChange={handleChange}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
+          <label htmlFor="exampleInputHobby" className="form-label">
             Hobby
           </label>
           <div className="form-check">
             <input
               type="checkbox"
               className="form-check-input"
-              id="exampleInputPassword1"
+              id="exampleInputHobby"
               name="hobby"
               value="dance"
+              checked={hobby.includes("dance") ? true : false}
               onChange={handleChange}
             />
-            <label class="form-check-label" for="flexRadioDefault1">
+            <label className="form-check-label" htmlFor="flexRadioDefault1">
               Dance
             </label>
           </div>
@@ -113,30 +121,32 @@ function Form() {
             <input
               type="checkbox"
               className="form-check-input"
-              id="exampleInputPassword1"
+              id="exampleInputDance"
               name="hobby"
               value="reading"
+              checked={hobby.includes("reading") ? true : false}
               onChange={handleChange}
             />
-            <label class="form-check-label" for="flexRadioDefault1">
+            <label className="form-check-label" htmlFor="flexRadioDefault1">
               Reading
             </label>
           </div>
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
+          <label htmlFor="exampleInputGender" className="form-label">
             Gender
           </label>
           <div className="form-check">
             <input
               type="radio"
               className="form-check-input"
-              id="exampleInputPassword1"
+              id="exampleInputMale"
               name="gender"
               value="male"
+              checked={user.gender === "male" ? true : false}
               onChange={handleChange}
             />
-            <label class="form-check-label" for="flexRadioDefault1">
+            <label className="form-check-label" htmlFor="flexRadioDefault1">
               Male
             </label>
           </div>
@@ -144,40 +154,40 @@ function Form() {
             <input
               type="radio"
               className="form-check-input"
-              id="exampleInputPassword1"
+              id="exampleInputFemale"
               name="gender"
               value="female"
+              checked={user.gender === "female" ? true : false}
               onChange={handleChange}
             />
-            <label class="form-check-label" for="flexRadioDefault1">
+            <label className="form-check-label" htmlFor="flexRadioDefault1">
               Female
             </label>
           </div>
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
+          <label htmlFor="exampleInputAddress" className="form-label">
             Address
           </label>
           <textarea
             className="form-control"
-            id="exampleInputPassword1"
+            id="exampleInputAddress"
             name="address"
             value={user.address || ""}
             onChange={handleChange}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
+          <label htmlFor="exampleInputCity" className="form-label">
             City
           </label>
           <select
             name="city"
-            class="form-select"
-            aria-label="Default select example"
+            id="exampleInputCity"
+            className="form-select"
             onChange={handleChange}
-            value={user.city || ""}
           >
-            <option selected disabled>
+            <option selected disabled value="">
               --Select-City--
             </option>
             {[
@@ -192,7 +202,11 @@ function Form() {
               "Dallas",
               "San Jose",
             ].map((city, index) => (
-              <option key={index} value={city}>
+              <option
+                selected={user.city == city ? true : false}
+                key={index}
+                value={city}
+              >
                 {" "}
                 {city}{" "}
               </option>
