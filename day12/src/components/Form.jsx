@@ -5,11 +5,12 @@ function Form() {
   const [user, setUser] = useState({});
   const [list, setList] = useState([]);
   const [hobby, setHobby] = useState([]);
+  const [error, setError] = useState({});
 
-  useEffect(()=>{
+  useEffect(() => {
     let oldList = JSON.parse(localStorage.getItem("list")) || [];
     setList(oldList);
-  })
+  }, []);
 
   const handleChange = (e) => {
     let { name, value, checked } = e.target;
@@ -31,14 +32,33 @@ function Form() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validation()) return;
     let newList = [...list, user];
     setList(newList);
-    localStorage.setItem('list',JSON.stringify(newList));
+    localStorage.setItem("list", JSON.stringify(newList));
     setUser({});
     setHobby([]);
   };
 
-  // console.log(list);
+  const validation = () => {
+    let tempError = {};
+    const pattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!user.username) tempError.username = "username is required";
+    if (!user.email) tempError.email = "email is required";
+    if (!user.password) tempError.password = "password is required";
+    if (user.password && !pattern.test(user.password))
+      tempError.password =
+        "Password is invalid. It must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character.";
+    if (!user.phone) tempError.phone = "phone is required";
+    if (!user.hobby) tempError.hobby = "hobby is required";
+    if (!user.gender) tempError.gender = "gender is required";
+    if (!user.address) tempError.address = "address is required";
+    if (!user.city) tempError.city = "city is required";
+
+    setError(tempError);
+    return Object.keys(tempError).length === 0;
+  };
 
   return (
     <>
@@ -56,6 +76,9 @@ function Form() {
             value={user.username || ""}
             onChange={handleChange}
           />
+          {error.username && (
+            <div className="text-danger">{error.username}</div>
+          )}
         </div>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
@@ -69,6 +92,7 @@ function Form() {
             value={user.email || ""}
             onChange={handleChange}
           />
+          {error.email && <div className="text-danger">{error.email}</div>}
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
           </div>
@@ -85,6 +109,9 @@ function Form() {
             value={user.password || ""}
             onChange={handleChange}
           />
+          {error.password && (
+            <div className="text-danger">{error.password}</div>
+          )}
         </div>
         <div className="mb-3">
           <label htmlFor="exampleInputPhone" className="form-label">
@@ -98,6 +125,7 @@ function Form() {
             value={user.phone || ""}
             onChange={handleChange}
           />
+          {error.phone && <div className="text-danger">{error.phone}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="exampleInputHobby" className="form-label">
@@ -131,6 +159,7 @@ function Form() {
               Reading
             </label>
           </div>
+          {error.hobby && <div className="text-danger">{error.hobby}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="exampleInputGender" className="form-label">
@@ -164,6 +193,7 @@ function Form() {
               Female
             </label>
           </div>
+          {error.gender && <div className="text-danger">{error.gender}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="exampleInputAddress" className="form-label">
@@ -176,11 +206,13 @@ function Form() {
             value={user.address || ""}
             onChange={handleChange}
           />
+          {error.address && <div className="text-danger">{error.address}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="exampleInputCity" className="form-label">
             City
           </label>
+
           <select
             name="city"
             id="exampleInputCity"
@@ -212,6 +244,7 @@ function Form() {
               </option>
             ))}
           </select>
+          {error.city && <div className="text-danger">{error.city}</div>}
         </div>
 
         <button type="submit" className="btn btn-primary">

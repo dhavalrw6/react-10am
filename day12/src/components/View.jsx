@@ -15,6 +15,7 @@ function View({ list, handleDelete, handleEdit }) {
             <th scope="col">password</th>
             <th scope="col">phone</th>
             <th scope="col">Gender</th>
+            <th scope="col">hobby</th>
             <th scope="col">address</th>
             <th scope="col">city</th>
             <th scope="col">Action</th>
@@ -30,6 +31,7 @@ function View({ list, handleDelete, handleEdit }) {
                 <td>{user.password}</td>
                 <td>{user.phone}</td>
                 <td>{user.gender}</td>
+                <td>{user.hobby.toString()}</td>
                 <td>{user.address}</td>
                 <td>{user.city}</td>
               </tr>
