@@ -6,6 +6,7 @@ function Form() {
   const [list, setList] = useState([]);
   const [hobby, setHobby] = useState([]);
   const [error, setError] = useState({});
+  const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     let oldList = JSON.parse(localStorage.getItem("list")) || [];
@@ -33,9 +34,21 @@ function Form() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validation()) return;
-    let newList = [...list, user];
-    setList(newList);
+    let newList = [];
+    if (editId == null) {
+      newList = [...list, { ...user, id: Date.now() }];
+    } else {
+      newList = [...list];
+      newList = newList.map((item) => {
+        if (item.id == editId) {
+          item = user;
+        }
+        return item;
+      });
+      setEditId(null);
+    }
     localStorage.setItem("list", JSON.stringify(newList));
+    setList(newList);
     setUser({});
     setHobby([]);
   };
@@ -58,6 +71,22 @@ function Form() {
 
     setError(tempError);
     return Object.keys(tempError).length === 0;
+  };
+
+  const handleDelete = (id) => {
+    let newList = [...list];
+    newList = newList.filter((user) => user.id != id);
+    alert("User Data deleted.");
+    localStorage.setItem("list", JSON.stringify(newList));
+    setList(newList);
+  };
+
+  const handleEdit = (id) => {
+    let newList = [...list];
+    let user = newList.filter((user) => user.id == id)[0];
+    setUser(user);
+    setHobby(user.hobby);
+    setEditId(user.id);
   };
 
   return (
@@ -251,7 +280,7 @@ function Form() {
           Submit
         </button>
       </form>
-      <View list={list} />
+      <View list={list} handleDelete={handleDelete} handleEdit={handleEdit} />
     </>
   );
 }

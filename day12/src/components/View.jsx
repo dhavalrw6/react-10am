@@ -3,7 +3,7 @@ import React from "react";
 function View({ list, handleDelete, handleEdit }) {
   return (
     <>
-      <table className="table w-50 mx-auto caption-top table-bordered">
+      <table className="table caption-top table-bordered">
         <caption>
           <h2>User Data</h2>
         </caption>
@@ -34,6 +34,17 @@ function View({ list, handleDelete, handleEdit }) {
                 <td>{user.hobby.toString()}</td>
                 <td>{user.address}</td>
                 <td>{user.city}</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(user.id)}
+                  >
+                    Delete
+                  </button>
+                  <button className="btn" onClick={() => handleEdit(user.id)}>
+                    Edit
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
